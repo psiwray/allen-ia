@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 
 class Relationship(Enum):
@@ -16,10 +15,3 @@ class Relationship(Enum):
     FINISHES = "f"
     FINISHES_INVERSE = "fi"
     EQUAL = "="
-
-
-def parse(symbol: str) -> Optional[Relationship]:
-    try:
-        return Relationship(symbol)
-    except ValueError:
-        return None

@@ -1,7 +1,5 @@
-from relationship import Relationship, parse
+from input.inverse_implication_table import read
 
 if __name__ == "__main__":
-    # for relationship in Relationship:
-    #     print(relationship.name, relationship.value)
-
-    print(parse("<").name)
+    irt = read("data/inverse_relationships_table.txt")
+    print(irt)
