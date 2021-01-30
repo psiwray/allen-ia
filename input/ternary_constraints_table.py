@@ -33,7 +33,7 @@ def read(file_path: str) -> TernaryConstraintsTable:
                 continue
 
             def parse_result_string(string: str) -> List[Relationship]:
-                matcher = compile(r"[^\s]+\s+")
+                matcher = compile(r"[^\s]+")
                 matches: List[Relationship] = []
                 matches_regex = matcher.findall(string)
                 for match_regex in matches_regex:
