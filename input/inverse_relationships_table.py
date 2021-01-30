@@ -45,7 +45,7 @@ def read(file_path: str) -> InverseRelationshipsTable:
     :return: the constructed table itself.
     """
 
-    line_validator = compile(r"\s*(?P<rel>[^\s]+)\s*::\s*(?P<inverse>[^\s]+)\s*")
+    line_validator = compile(r"(?P<rel>[^\s]+)\s*::\s*(?P<inverse>[^\s]+)")
     inverse_relationships_table = InverseRelationshipsTable()
 
     with open(file_path, "r") as file:
