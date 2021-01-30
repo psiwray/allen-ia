@@ -1,2 +1,7 @@
+from relationship import Relationship, parse
+
 if __name__ == "__main__":
-    print("Hello, world!")
+    # for relationship in Relationship:
+    #     print(relationship.name, relationship.value)
+
+    print(parse("<").name)
