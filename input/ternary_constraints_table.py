@@ -1,31 +1,36 @@
-from typing import Dict, List
 from re import compile
+from typing import List
 
 from relationship import Relationship
 
 
-class TernaryConstraintsTable:
-    constraints: Dict[Relationship, Dict[Relationship, List[Relationship]]]
+class TernaryConstraint:
+    relationship_t1_t2: Relationship
+    relationship_t2_t3: Relationship
+    relationships_t1_t3: List[Relationship]
 
-    def __init__(self):
-        self.constraints = {}
-
-    def add_constraint(self, rel1: Relationship, rel2: Relationship, result: List[Relationship]):
-        if rel1 not in self.constraints:
-            self.constraints[rel1] = {}
-
-        self.constraints[rel1][rel2] = result
-
-    def get_constraint(self, rel1: Relationship, rel2: Relationship):
-        return self.constraints[rel1][rel2]
+    def __init__(self, relationship_t1_t2: Relationship, relationship_t2_t3: Relationship,
+                 relationships_t1_t3: List[Relationship]):
+        self.relationship_t1_t2 = relationship_t1_t2
+        self.relationship_t2_t3 = relationship_t2_t3
+        self.relationships_t1_t3 = relationships_t1_t3
 
 
-def read(file_path: str) -> TernaryConstraintsTable:
-    line_validator = compile(r"(?P<rel1>[^\s]+)\s*:\s*(?P<rel2>[^\s]+)\s*::\s*\(\s*(?P<result>.+)\s*\)")
-    ternary_constraints_table = TernaryConstraintsTable()
+TernaryConstraintsTable = List[TernaryConstraint]
+
+
+def read_ternary_constraints_table(file_path: str) -> TernaryConstraintsTable:
+    """
+    Read the contents of a ternary constraints table and return a structure
+    that describes said table.
+    :param file_path: the path on disk of the table.
+    :return: the constructed table itself.
+    """
+
+    line_validator = compile(r"(?P<r1>[^\s]+)\s*:\s*(?P<r2>[^\s]+)\s*::\s*\(\s*(?P<relationships>.+)\s*\)")
+    ternary_constraints_table = []
 
     with open(file_path, "r") as file:
-
         for line in file:
             line = line.strip()
             # Skip empty lines.
@@ -43,11 +48,11 @@ def read(file_path: str) -> TernaryConstraintsTable:
 
             match = line_validator.match(line)
             if match:
-                ternary_constraints_table.add_constraint(
-                    Relationship(match.group("rel1")),
-                    Relationship(match.group("rel2")),
-                    parse_result_string(match.group("result"))
-                )
+                ternary_constraints_table.append(TernaryConstraint(
+                    Relationship(match.group("r1")),
+                    Relationship(match.group("r2")),
+                    parse_result_string(match.group("relationships"))
+                ))
             else:
                 raise RuntimeError("Invalid line found in the ternary constraints table.", line)
 

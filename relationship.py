@@ -15,3 +15,6 @@ class Relationship(Enum):
     FINISHES = "f"
     FINISHES_INVERSE = "fi"
     EQUAL = "="
+
+    def __str__(self):
+        return f"{self.value}"
