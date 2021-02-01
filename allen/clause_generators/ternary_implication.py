@@ -1,8 +1,8 @@
 from typing import List
 
 from allen.clause import Clause
-from allen.input.ternary_constraints_table import TernaryConstraintsTable
-from allen.input.time_intervals_table import TimeIntervalsGroup
+from allen.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_t1_t2_dict
+from allen.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
 from allen.literal import Literal
 from allen.relationship import Relationship
 
@@ -12,33 +12,23 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
 
     def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> List[Clause]:
         generated_clauses: List[Clause] = []
+        relationships_dict = ternary_constraints_to_t1_t2_dict(table)
+        intervals_dict = time_intervals_to_dict(group)
 
         # First find the possible combinations of relationships between (i, j)
         # and (j, k) using the time intervals. Next, check what possible
         # relationships can occur between (i, k) and use them to construct a
         # single clause.
-        t1_t2_relationships: List[Relationship] = []
-        t2_t3_relationships: List[Relationship] = []
-
-        for intervals_relationships in group.intervals_relationships:
-            if intervals_relationships.t1 == t1 and intervals_relationships.t2 == t2:
-                t1_t2_relationships.extend(intervals_relationships.relationships)
-        for intervals_relationships in group.intervals_relationships:
-            if intervals_relationships.t1 == t2 and intervals_relationships.t2 == t3:
-                t2_t3_relationships.extend(intervals_relationships.relationships)
+        t1_t2_relationships: List[Relationship] = intervals_dict[(t1, t2)]
+        t2_t3_relationships: List[Relationship] = intervals_dict[(t2, t3)]
 
         for r_t1_t2 in t1_t2_relationships:
             for r_t2_t3 in t2_t3_relationships:
-                t1_t3_relationships: List[Relationship] = []
-                clause_for_triplet: Clause = []
-
-                for item in table:
-                    if item.relationship_t1_t2 == r_t1_t2 and item.relationship_t2_t3 == r_t2_t3:
-                        t1_t3_relationships.extend(item.relationships_t1_t3)
-                        break
-
-                clause_for_triplet.append(Literal(t1, t2, r_t1_t2, True))
-                clause_for_triplet.append(Literal(t2, t3, r_t2_t3, True))
+                t1_t3_relationships: List[Relationship] = relationships_dict[(r_t1_t2, r_t2_t3)]
+                clause_for_triplet: Clause = [
+                    Literal(t1, t2, r_t1_t2, True),
+                    Literal(t2, t3, r_t2_t3, True)
+                ]
 
                 for r in t1_t3_relationships:
                     clause_for_triplet.append(Literal(t1, t3, r))

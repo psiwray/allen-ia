@@ -1,5 +1,5 @@
 from re import compile
-from typing import List
+from typing import List, Tuple, Dict
 
 from allen.relationship import Relationship
 
@@ -86,3 +86,7 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
                     raise RuntimeError("Failed to fetch total time intervals.")
 
     return time_intervals_groups
+
+
+def time_intervals_to_dict(group: TimeIntervalsGroup) -> Dict[Tuple[int, int], List[Relationship]]:
+    return {(i.t1, i.t2): i.relationships for i in group.intervals_relationships}

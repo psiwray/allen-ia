@@ -1,5 +1,5 @@
 from re import compile
-from typing import List
+from typing import List, Tuple, Dict
 
 from allen.relationship import Relationship
 
@@ -57,3 +57,8 @@ def read_ternary_constraints_table(file_path: str) -> TernaryConstraintsTable:
                 raise RuntimeError("Invalid line found in the ternary constraints table.", line)
 
     return ternary_constraints_table
+
+
+def ternary_constraints_to_t1_t2_dict(table: TernaryConstraintsTable) -> \
+        Dict[Tuple[Relationship, Relationship], List[Relationship]]:
+    return {(i.relationship_t1_t2, i.relationship_t2_t3): i.relationships_t1_t3 for i in table}
