@@ -123,14 +123,14 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
         return generated_clauses
 
     n = group.total_time_intervals
+    # FIXME: I'm skipping duplicates using a particular set of ranges here.
+    #  Specifically, j always starts from i + 1 and k always starts from j + 1.
+    #  This means that no duplicates are generated like (0, 0, 1) or even
+    #  (0, 0, 0) and at the same time no duplicate clauses (one the opposite of
+    #  the other) aren't generated either.
     for i in range(n):
-        for j in range(n):
-            for k in range(n):
-                if i == j:
-                    continue
-                if j == k:
-                    continue
-
+        for j in range(i + 1, n):
+            for k in range(j + 1, n):
                 clauses.extend(generate_clause_for_triplet(i, j, k))
 
     return clauses
