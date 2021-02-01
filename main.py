@@ -1,5 +1,8 @@
-from allen.clause import clause_to_string, generate_at_least_one, generate_inverse_implication, generate_at_most_one, \
-    generate_ternary_implication
+from allen.clause import clause_to_string
+from allen.clause_generators.at_least_one import generate_at_least_one
+from allen.clause_generators.at_most_one import generate_at_most_one
+from allen.clause_generators.inverse_implication import generate_inverse_implication
+from allen.clause_generators.ternary_implication import generate_ternary_implication
 from allen.input.inverse_relationships_table import read_inverse_relationships_table
 from allen.input.ternary_constraints_table import read_ternary_constraints_table
 from allen.input.time_intervals_table import read_time_intervals_table
