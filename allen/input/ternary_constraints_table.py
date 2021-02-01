@@ -59,6 +59,6 @@ def read_ternary_constraints_table(file_path: str) -> TernaryConstraintsTable:
     return ternary_constraints_table
 
 
-def ternary_constraints_to_t1_t2_dict(table: TernaryConstraintsTable) -> \
+def ternary_constraints_to_dict(table: TernaryConstraintsTable) -> \
         Dict[Tuple[Relationship, Relationship], List[Relationship]]:
     return {(i.relationship_t1_t2, i.relationship_t2_t3): i.relationships_t1_t3 for i in table}

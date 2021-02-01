@@ -1,6 +1,7 @@
 from allen.clause import clause_to_string
 from allen.clause_generators.at_least_one import generate_at_least_one
 from allen.clause_generators.at_most_one import generate_at_most_one
+from allen.clause_generators.expression_reference import generate_expression_reference
 from allen.clause_generators.inverse_implication import generate_inverse_implication
 from allen.clause_generators.ternary_implication import generate_ternary_implication
 from allen.input.inverse_relationships_table import read_inverse_relationships_table
@@ -26,4 +27,8 @@ if __name__ == "__main__":
 
     print("Ternary constraints implication:")
     for clause in generate_ternary_implication(time_intervals_table[0], ternary_constraints_table):
+        print(clause_to_string(clause))
+
+    print("Expression reference:")
+    for clause in generate_expression_reference(time_intervals_table[0], ternary_constraints_table):
         print(clause_to_string(clause))

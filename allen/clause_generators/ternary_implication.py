@@ -1,7 +1,7 @@
 from typing import List
 
 from allen.clause import Clause
-from allen.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_t1_t2_dict
+from allen.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
 from allen.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
 from allen.literal import Literal
 from allen.relationship import Relationship
@@ -12,7 +12,7 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
 
     def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> List[Clause]:
         generated_clauses: List[Clause] = []
-        relationships_dict = ternary_constraints_to_t1_t2_dict(table)
+        relationships_dict = ternary_constraints_to_dict(table)
         intervals_dict = time_intervals_to_dict(group)
 
         # First find the possible combinations of relationships between (i, j)
