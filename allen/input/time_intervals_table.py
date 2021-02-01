@@ -1,7 +1,7 @@
 from re import compile
 from typing import List
 
-from relationship import Relationship
+from allen.relationship import Relationship
 
 
 class TimeIntervalsRelationships:

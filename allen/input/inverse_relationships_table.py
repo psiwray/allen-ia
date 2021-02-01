@@ -1,7 +1,7 @@
 from re import compile
-from typing import List
+from typing import List, Dict
 
-from relationship import Relationship
+from allen.relationship import Relationship
 
 
 class InverseRelationship:
@@ -45,3 +45,7 @@ def read_inverse_relationships_table(file_path: str) -> InverseRelationshipsTabl
                 raise RuntimeError("Invalid line found in the inverse relationships table.", line)
 
     return inverse_relationships_table
+
+
+def inverse_relationships_to_dict(table: InverseRelationshipsTable) -> Dict[Relationship, Relationship]:
+    return {i.relationship: i.inverse for i in table}
