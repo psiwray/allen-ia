@@ -1,4 +1,7 @@
+from typing import Tuple
+
 from allen.literal import Literal
+from allen.relationship import Relationship
 
 
 class ExpressionLiteral:
@@ -13,3 +16,8 @@ class ExpressionLiteral:
 
     def __str__(self):
         return f"{chr(0xAC) if self.negated else ''}[({self.l1}) \u2227 ({str(self.l2)})]"
+
+    def as_tuple(self) -> Tuple[int, int, Relationship, int, int, Relationship]:
+        return \
+            self.l1.t1, self.l1.t2, self.l1.relationship, \
+            self.l2.t1, self.l2.t2, self.l2.relationship

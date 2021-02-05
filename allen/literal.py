@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from allen.relationship import Relationship
 
 
@@ -15,3 +17,6 @@ class Literal:
 
     def __str__(self):
         return f"{chr(0xAC) if self.negated else ''}(t{self.t1} {self.relationship} t{self.t2})"
+
+    def as_tuple(self) -> Tuple[int, int, Relationship]:
+        return self.t1, self.t2, self.relationship
