@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import List
 
 from allen.clause import Clause
@@ -20,7 +21,12 @@ class Data:
         self.ternary_constraints = ternary_constraints
 
 
-def generate_sat_output(group: TimeIntervalsGroup, data: Data) -> List[str]:
+class Coding(Enum):
+    TERNARY_IMPLICATION = 0
+    EXPRESSION_REFERENCE = 1
+
+
+def generate_sat_output(group: TimeIntervalsGroup, data: Data, coding: Coding = Coding.TERNARY_IMPLICATION):
     number_dict = NumberDict()
     number_lines: List[str] = []
     clauses: List[Clause] = []
@@ -28,8 +34,12 @@ def generate_sat_output(group: TimeIntervalsGroup, data: Data) -> List[str]:
     clauses.extend(generate_inverse_implication(group, data.inverse_implications))
     clauses.extend(generate_at_least_one(group))
     clauses.extend(generate_at_most_one(group))
-    clauses.extend(generate_ternary_implication(group, data.ternary_constraints))
-    clauses.extend(generate_expression_reference(group, data.ternary_constraints))
+    if coding == Coding.TERNARY_IMPLICATION:
+        clauses.extend(generate_ternary_implication(group, data.ternary_constraints))
+        # print("Using the ternary implication coding.")
+    elif coding == Coding.EXPRESSION_REFERENCE:
+        # print("Using the expression reference coding.")
+        clauses.extend(generate_expression_reference(group, data.ternary_constraints))
 
     for clause in clauses:
         number_line: List[int] = []
