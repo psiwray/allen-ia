@@ -8,6 +8,14 @@ from allen.relationship import Relationship
 
 
 def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstraintsTable) -> List[Clause]:
+    """
+    Generate the clauses using the ternary implication algorithm.
+
+    :param group: the time intervals group to execute the algorithm on.
+    :param table: the ternary constraints table.
+    :return: the generated clauses.
+    """
+
     clauses: List[Clause] = []
 
     def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> List[Clause]:

@@ -5,6 +5,10 @@ from allen.relationship import Relationship
 
 
 class InverseRelationship:
+    """
+    Associate the inverse of a relationship to the relationship itself.
+    """
+
     relationship: Relationship
     inverse: Relationship
 
@@ -13,15 +17,16 @@ class InverseRelationship:
         self.inverse = inverse
 
 
+# The inverse relationships table is just a list of inverse relationships.
 InverseRelationshipsTable = List[InverseRelationship]
 
 
 def read_inverse_relationships_table(file_path: str) -> InverseRelationshipsTable:
     """
-    Read the contents of an inverse relationships table and return a structure
-    that describes said table.
-    :param file_path: the path on disk of the table.
-    :return: the constructed table itself.
+    This function reads the inverse relationships table from a file.
+
+    :param file_path: the file path where to read from.
+    :return: the constructed structure.
     """
 
     line_validator = compile(r"(?P<rel>[^\s]+)\s*::\s*(?P<inverse>[^\s]+)")
@@ -48,4 +53,11 @@ def read_inverse_relationships_table(file_path: str) -> InverseRelationshipsTabl
 
 
 def inverse_relationships_to_dict(table: InverseRelationshipsTable) -> Dict[Relationship, Relationship]:
+    """
+    Convert the inverse relationships table to a simple dictionary where the key is the starting relationship an the
+    value is its inverse.
+
+    :param table: the table to convert.
+    :return: the constructed dictionary.
+    """
     return {i.relationship: i.inverse for i in table}

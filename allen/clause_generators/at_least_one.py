@@ -6,6 +6,13 @@ from allen.literal import Literal
 
 
 def generate_at_least_one(group: TimeIntervalsGroup) -> List[Clause]:
+    """
+    Generate the clauses using the at least one algorithm.
+
+    :param group: the time intervals group to execute the algorithm on.
+    :return: the generated clauses.
+    """
+
     clauses: List[Clause] = []
 
     for intervals_relationships in group.intervals_relationships:

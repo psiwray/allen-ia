@@ -5,6 +5,10 @@ from allen.relationship import Relationship
 
 
 class TimeIntervalsRelationships:
+    """
+    This gathers all possible relationships that can be found between two time intervals.
+    """
+
     t1: int
     t2: int
     relationships: List[Relationship]
@@ -16,6 +20,12 @@ class TimeIntervalsRelationships:
 
 
 class TimeIntervalsGroup:
+    """
+    This describes a single group containing a list of time intervals relationships and the total number of time
+    intervals found for the current group. The total time intervals is an integer number that's one more than the
+    maximum time interval identifier. Each time interval is also identified by an integer number, starting from zero.
+    """
+
     number: int
     total_time_intervals: int
     intervals_relationships: List[TimeIntervalsRelationships]
@@ -27,15 +37,27 @@ class TimeIntervalsGroup:
         self.intervals_relationships = intervals_relationships
 
 
+# A time intervals table is just a list of time intervals groups.
 TimeIntervalsTable = List[TimeIntervalsGroup]
 
 
 def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
+    """
+    This function reads the time intervals table from a file.
+
+    :param file_path: the file path where to read from.
+    :return: the constructed structure.
+    """
+
     time_intervals_groups: TimeIntervalsTable = []
     group_counter: int = 0
     reading_time_intervals = False
 
     with open(file_path, "r") as file:
+        # This is basically a simple state machine that keeps track of which point the scanning is currently at. For
+        # example, it might need to read a new group and thus parse the header, or read a list of lines or find the end
+        # of the current group and so on. Regular expressions are used to quickly match lines.
+
         total_time_intervals_regex = compile(r"(?P<count>\d+)\s*")
         time_interval_regex = compile(r"(?P<t1>\d+)\s+(?P<t2>\d+)\s+\(\s*(?P<relationships>.+)\s*\)")
 
@@ -43,6 +65,12 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
         time_intervals_relationships: List[TimeIntervalsRelationships] = []
 
         def parse_relationships_string(string: str) -> List[Relationship]:
+            """
+            This parses a list of relationships written between round brackets.
+
+            :param string: the string to read from.
+            :return: the list of relationships found.
+            """
             matcher = compile(r"[^\s]+")
             matches: List[Relationship] = []
             matches_regex = matcher.findall(string)
@@ -89,4 +117,11 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
 
 
 def time_intervals_to_dict(group: TimeIntervalsGroup) -> Dict[Tuple[int, int], List[Relationship]]:
+    """
+    Convert the time intervals group to a simple dictionary where the key is the pair of time intervals identifiers and
+    the value is the list of relationships.
+
+    :param group: the group to convert.
+    :return: the constructed dictionary.
+    """
     return {(i.t1, i.t2): i.relationships for i in group.intervals_relationships}

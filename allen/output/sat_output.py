@@ -16,31 +16,49 @@ from allen.output.number_dict import NumberDict
 
 
 class Data:
+    """
+    A collection of all the data required by the algorithms to generate the clauses.
+    """
+
     def __init__(self, inverse_implications: InverseRelationshipsTable, ternary_constraints: TernaryConstraintsTable):
         self.inverse_implications = inverse_implications
         self.ternary_constraints = ternary_constraints
 
 
 class Coding(Enum):
+    """
+    The coding of choice selected by the user.
+    """
+
     TERNARY_IMPLICATION = 0
     EXPRESSION_REFERENCE = 1
 
 
-def generate_sat_output(group: TimeIntervalsGroup, data: Data, coding: Coding = Coding.TERNARY_IMPLICATION):
+def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding: Coding = Coding.TERNARY_IMPLICATION):
+    """
+    First compute the required algorithms on the input data to generate the boolean clauses, then convert those clauses
+    into a textual format using the output generator and return.
+
+    :param group: the input data used by the algorithms.
+    :param data: the literal identifier generators.
+    :param coding: the coding that the user chose.
+    :return: the list of generated clauses as strings compatible with SAT input.
+    """
+
     number_dict = NumberDict()
     number_lines: List[str] = []
     clauses: List[Clause] = []
 
+    # Execute every algorithm on the same set of time intervals.
     clauses.extend(generate_inverse_implication(group, data.inverse_implications))
     clauses.extend(generate_at_least_one(group))
     clauses.extend(generate_at_most_one(group))
     if coding == Coding.TERNARY_IMPLICATION:
         clauses.extend(generate_ternary_implication(group, data.ternary_constraints))
-        # print("Using the ternary implication coding.")
     elif coding == Coding.EXPRESSION_REFERENCE:
-        # print("Using the expression reference coding.")
         clauses.extend(generate_expression_reference(group, data.ternary_constraints))
 
+    # Generate unique identifiers for every literal and add the result to the global list.
     for clause in clauses:
         number_line: List[int] = []
         number: int = 0

@@ -2,6 +2,11 @@ from enum import Enum
 
 
 class Relationship(Enum):
+    """
+    Representation of a relationship. Every enumeration's key also contains the
+    symbol used to describe the relationship.
+    """
+
     BEFORE = "<"
     AFTER = ">"
     MEETS = "m"

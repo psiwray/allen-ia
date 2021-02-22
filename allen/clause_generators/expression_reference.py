@@ -8,9 +8,25 @@ from allen.literal import Literal
 
 
 def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConstraintsTable) -> List[Clause]:
+    """
+    Generate the clauses using the expression reference algorithm.
+
+    :param group: the time intervals group to execute the algorithm on.
+    :param table: the ternary constraints table.
+    :return: the generated clauses.
+    """
+
     clauses: List[Clause] = []
 
-    def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> List[Clause]:
+    def generate_clause_for_triple(t1: int, t2: int, t3: int) -> List[Clause]:
+        """
+        Generate the required clauses for a simple triple.
+
+        :param t1: the first chosen time interval.
+        :param t2: the second chosen time interval.
+        :param t3: the third chosen time interval.
+        :return: the generated clauses.
+        """
         generated_clauses: List[Clause] = []
         relationships_dict = ternary_constraints_to_dict(table)
         intervals_dict = time_intervals_to_dict(group)
@@ -76,6 +92,6 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
     for i in range(n):
         for j in range(i + 1, n):
             for k in range(j + 1, n):
-                clauses.extend(generate_clause_for_triplet(i, j, k))
+                clauses.extend(generate_clause_for_triple(i, j, k))
 
     return clauses

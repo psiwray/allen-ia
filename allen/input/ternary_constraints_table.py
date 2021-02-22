@@ -5,6 +5,11 @@ from allen.relationship import Relationship
 
 
 class TernaryConstraint:
+    """
+    This represents the possible relationships that can occur between two time intervals t1 and t3 if the relationships
+    between t1-t2 and t2-t3 are defined.
+    """
+
     relationship_t1_t2: Relationship
     relationship_t2_t3: Relationship
     relationships_t1_t3: List[Relationship]
@@ -16,15 +21,16 @@ class TernaryConstraint:
         self.relationships_t1_t3 = relationships_t1_t3
 
 
+# The ternary constraints table is simply a list of ternary constraints.
 TernaryConstraintsTable = List[TernaryConstraint]
 
 
 def read_ternary_constraints_table(file_path: str) -> TernaryConstraintsTable:
     """
-    Read the contents of a ternary constraints table and return a structure
-    that describes said table.
-    :param file_path: the path on disk of the table.
-    :return: the constructed table itself.
+    This function reads the ternary constraints table from a file.
+
+    :param file_path: the file path where to read from.
+    :return: the constructed structure.
     """
 
     line_validator = compile(r"(?P<r1>[^\s]+)\s*:\s*(?P<r2>[^\s]+)\s*::\s*\(\s*(?P<relationships>.+)\s*\)")
@@ -61,4 +67,11 @@ def read_ternary_constraints_table(file_path: str) -> TernaryConstraintsTable:
 
 def ternary_constraints_to_dict(table: TernaryConstraintsTable) -> \
         Dict[Tuple[Relationship, Relationship], List[Relationship]]:
+    """
+    Convert the ternary constraints table to a simple dictionary where the key is the pair of relationships found
+    between t1-t2 and t2-t3 and the value is the possible relationships that can be found between t1-t3.
+
+    :param table: the table to convert.
+    :return: the constructed dictionary.
+    """
     return {(i.relationship_t1_t2, i.relationship_t2_t3): i.relationships_t1_t3 for i in table}

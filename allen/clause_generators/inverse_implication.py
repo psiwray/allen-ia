@@ -8,6 +8,14 @@ from allen.relationship import Relationship
 
 
 def generate_inverse_implication(group: TimeIntervalsGroup, table: InverseRelationshipsTable) -> List[Clause]:
+    """
+    Generate the clauses using the inverse implication algorithm.
+
+    :param group: the time intervals group to execute the algorithm on.
+    :param table: the inverse relationships table.
+    :return: the generated clauses.
+    """
+
     clauses: List[Clause] = []
     inverse_of = inverse_relationships_to_dict(table)
 
