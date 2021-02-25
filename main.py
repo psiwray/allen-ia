@@ -40,12 +40,12 @@ if __name__ == "__main__":
         coding_enum = Coding.EXPRESSION_REFERENCE
 
     # Write the result to files, one for every group.
-    for group in read_time_intervals_table(input_file):
-        try:
-            mkdir(output_folder)
-        except FileExistsError:
-            pass
+    try:
+        mkdir(output_folder)
+    except FileExistsError:
+        pass
 
+    for group in read_time_intervals_table(input_file):
         with open(f"{output_folder}/{group.number}.txt", "w") as file:
             for line in generate_sat_output_for_group(group, data, coding_enum):
                 file.write(line)
