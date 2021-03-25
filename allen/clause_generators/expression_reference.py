@@ -17,6 +17,8 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
     """
 
     clauses: List[Clause] = []
+    relationships_dict = ternary_constraints_to_dict(table)
+    intervals_dict = time_intervals_to_dict(group)
 
     def generate_clause_for_triple(t1: int, t2: int, t3: int) -> List[Clause]:
         """
@@ -28,8 +30,6 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
         :return: the generated clauses.
         """
         generated_clauses: List[Clause] = []
-        relationships_dict = ternary_constraints_to_dict(table)
-        intervals_dict = time_intervals_to_dict(group)
 
         t1_t2_relationships = intervals_dict[(t1, t2)]
         t2_t3_relationships = intervals_dict[(t2, t3)]

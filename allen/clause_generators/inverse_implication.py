@@ -26,7 +26,7 @@ def generate_inverse_implication(group: TimeIntervalsGroup, table: InverseRelati
             if relationship == Relationship.EQUAL:
                 continue
 
-            clause: Clause = [
+            clauses.append([
                 Literal(
                     intervals_relationships.t1,
                     intervals_relationships.t2,
@@ -37,7 +37,18 @@ def generate_inverse_implication(group: TimeIntervalsGroup, table: InverseRelati
                     intervals_relationships.t1,
                     inverse_of[relationship]
                 )
-            ]
-            clauses.append(clause)
+            ])
+            clauses.append([
+                Literal(
+                    intervals_relationships.t2,
+                    intervals_relationships.t1,
+                    inverse_of[relationship], True
+                ),
+                Literal(
+                    intervals_relationships.t1,
+                    intervals_relationships.t2,
+                    relationship
+                )
+            ])
 
     return clauses

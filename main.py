@@ -46,7 +46,15 @@ if __name__ == "__main__":
         pass
 
     for group in read_time_intervals_table(input_file):
+        output_number, output_math = generate_sat_output_for_group(group, data, coding_enum)
         with open(f"{output_folder}/{group.number}.txt", "w") as file:
-            for line in generate_sat_output_for_group(group, data, coding_enum):
-                file.write(line)
-                file.write("\n")
+            for output in output_number:
+                file.write(output)
+                file.write("\n")  # TODO: Substitute with operating system's dependent line separator.
+
+        # Also write the corresponding mathematical representation to a separate file, with the same name but
+        # having a different extension.
+        with open(f"{output_folder}/{group.number}.math", "w") as file:
+            for output in output_math:
+                file.write(output)
+                file.write("\n")  # TODO: Substitute with operating system's dependent line separator.
