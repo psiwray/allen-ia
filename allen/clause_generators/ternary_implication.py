@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from allen.clause import Clause
 from allen.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
@@ -30,13 +30,20 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
         intervals_dict_ext[(t_to, t_from)] = [inverse_relationships_dict[r] for r in relationships]
     intervals_dict.update(intervals_dict_ext)
 
-    def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> List[Clause]:
+    def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> Optional[List[Clause]]:
         generated_clauses: List[Clause] = []
 
         # First find the possible combinations of relationships between (i, j)
         # and (j, k) using the time intervals. Next, check what possible
         # relationships can occur between (i, k) and use them to construct a
         # single clause.
+        if (t1, t2) not in intervals_dict:
+            return
+        if (t2, t3) not in intervals_dict:
+            return
+        if (t1, t3) not in intervals_dict:
+            return
+
         t1_t2_relationships: List[Relationship] = intervals_dict[(t1, t2)]
         t2_t3_relationships: List[Relationship] = intervals_dict[(t2, t3)]
 
@@ -51,26 +58,21 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
                 for r in t1_t3_relationships:
                     # Before adding the relationship to the list we first need to check if it's actually possible for
                     # the first and third time interval to have that relationship. If not, we skip adding this one.
-                    if r in intervals_dict[(t1, t3)]:
+                    if ((t1, t3) in intervals_dict) and (r in intervals_dict[(t1, t3)]):
                         clause_for_triplet.append(Literal(t1, t3, r))
-                    # else:
-                    #     print(f"Skipped non-existent relationship '{r}' between t{t1} and t{t3}.")
 
                 generated_clauses.append(clause_for_triplet)
 
         return generated_clauses
 
     n = group.total_time_intervals
-    # for i in range(n):
-    #     for j in range(i + 1, n):
-    #         for k in range(j + 1, n):
-    #             clauses.extend(generate_clause_for_triplet(i, j, k))
-
     for i in range(n):
         for j in range(n):
             for k in range(n):
                 if i == j or j == k or i == k:
                     continue
-                clauses.extend(generate_clause_for_triplet(i, j, k))
+                generation_result = generate_clause_for_triplet(i, j, k)
+                if generation_result:
+                    clauses.extend(generation_result)
 
     return clauses

@@ -52,12 +52,18 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
     clauses: List[Clause] = []
 
     # Execute every algorithm on the same set of time intervals.
+    print(f"Generating SAT output for group {group.number}.")
+    print(f"\tInverse implication...")
     clauses.extend(generate_inverse_implication(group, data.inverse_implications))
+    print(f"\tAt least one...")
     clauses.extend(generate_at_least_one(group))
+    print(f"\tAt most one...")
     clauses.extend(generate_at_most_one(group))
     if coding == Coding.TERNARY_IMPLICATION:
+        print(f"\tTernary implication...")
         clauses.extend(generate_ternary_implication(group, data.ternary_constraints, data.inverse_implications))
     elif coding == Coding.EXPRESSION_REFERENCE:
+        print(f"\tExpression reference...")
         clauses.extend(generate_expression_reference(group, data.ternary_constraints, data.inverse_implications))
 
     # Generate unique identifiers for every literal and add the result to the global list.

@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import List, Callable, Optional
 
 from allen.clause import Clause
 from allen.expression_literal import ExpressionLiteral
@@ -30,7 +30,7 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
         intervals_dict_ext[(t_to, t_from)] = [inverse_relationships_dict[r] for r in relationships]
     intervals_dict.update(intervals_dict_ext)
 
-    def generate_clause_for_triple(t1: int, t2: int, t3: int) -> List[Clause]:
+    def generate_clause_for_triple(t1: int, t2: int, t3: int) -> Optional[List[Clause]]:
         """
         Generate the required clauses for a simple triple.
 
@@ -40,6 +40,13 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
         :return: the generated clauses.
         """
         generated_clauses: List[Clause] = []
+
+        if (t1, t2) not in intervals_dict:
+            return
+        if (t2, t3) not in intervals_dict:
+            return
+        if (t1, t3) not in intervals_dict:
+            return
 
         t1_t2_relationships = intervals_dict[(t1, t2)]
         t2_t3_relationships = intervals_dict[(t2, t3)]
@@ -99,6 +106,8 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
         for j in range(n):
             for k in range(n):
                 if i != j and j != k and i != k:
-                    clauses.extend(generate_clause_for_triple(i, j, k))
+                    generation_result = generate_clause_for_triple(i, j, k)
+                    if generation_result:
+                        clauses.extend(generation_result)
 
     return clauses
