@@ -1,7 +1,7 @@
 from getopt import getopt
 from sys import argv
-from typing import Optional
-from os import mkdir
+from typing import Optional, Union
+from os import mkdir, linesep
 
 from allen.input.inverse_relationships_table import read_inverse_relationships_table
 from allen.input.ternary_constraints_table import read_ternary_constraints_table
@@ -9,7 +9,7 @@ from allen.input.time_intervals_table import read_time_intervals_table
 from allen.output.sat_output import generate_sat_output_for_group, Data, Coding
 
 if __name__ == "__main__":
-    matched_args, remaining_args = getopt(argv[1:], "d:c:o:", ["data=", "coding=", "output="])
+    matched_args, remaining_args = getopt(argv[1:], "d:c:o", ["data=", "coding=", "output="])
 
 
     def find_argument(short: str, long: str) -> Optional[str]:
@@ -47,14 +47,14 @@ if __name__ == "__main__":
 
     for group in read_time_intervals_table(input_file):
         output_number, output_math = generate_sat_output_for_group(group, data, coding_enum)
-        with open(f"{output_folder}/{group.number}.txt", "w") as file:
+        with open(f"{output_folder}/{group.number}.sat", "w") as file:
             for output in output_number:
                 file.write(output)
-                file.write("\n")  # TODO: Substitute with operating system's dependent line separator.
+                file.write(linesep)
 
         # Also write the corresponding mathematical representation to a separate file, with the same name but
         # having a different extension.
         with open(f"{output_folder}/{group.number}.math", "w") as file:
             for output in output_math:
                 file.write(output)
-                file.write("\n")  # TODO: Substitute with operating system's dependent line separator.
+                file.write(linesep)

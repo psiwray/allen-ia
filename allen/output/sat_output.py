@@ -58,7 +58,7 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
     if coding == Coding.TERNARY_IMPLICATION:
         clauses.extend(generate_ternary_implication(group, data.ternary_constraints, data.inverse_implications))
     elif coding == Coding.EXPRESSION_REFERENCE:
-        clauses.extend(generate_expression_reference(group, data.ternary_constraints))
+        clauses.extend(generate_expression_reference(group, data.ternary_constraints, data.inverse_implications))
 
     # Generate unique identifiers for every literal and add the result to the global list.
     for clause in clauses:
