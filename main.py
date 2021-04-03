@@ -46,8 +46,10 @@ if __name__ == "__main__":
         pass
 
     for group in read_time_intervals_table(input_file):
-        output_number, output_math = generate_sat_output_for_group(group, data, coding_enum)
+        total_literals, output_number, output_math = generate_sat_output_for_group(group, data, coding_enum)
         with open(f"{output_folder}/{group.number}.sat", "w") as file:
+            file.write(f"c{group.comment}{linesep}")
+            file.write(f"p cnf {total_literals} {len(output_number)}{linesep}")
             for output in output_number:
                 file.write(output)
                 file.write(linesep)

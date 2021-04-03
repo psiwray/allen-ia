@@ -88,3 +88,6 @@ class NumberDict:
         self.identified_expression_literals[literal.as_tuple()] = self._current_number
         self._current_number += 1
         return old_number
+
+    def get_current_number(self):
+        return self._current_number

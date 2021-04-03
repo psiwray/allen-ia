@@ -29,12 +29,14 @@ class TimeIntervalsGroup:
     number: int
     total_time_intervals: int
     intervals_relationships: List[TimeIntervalsRelationships]
+    comment: str
 
     def __init__(self, number: int, total_time_intervals: int,
-                 intervals_relationships: List[TimeIntervalsRelationships]):
+                 intervals_relationships: List[TimeIntervalsRelationships], comment: str):
         self.number = number
         self.total_time_intervals = total_time_intervals
         self.intervals_relationships = intervals_relationships
+        self.comment = comment
 
 
 # A time intervals table is just a list of time intervals groups.
@@ -58,7 +60,7 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
         # example, it might need to read a new group and thus parse the header, or read a list of lines or find the end
         # of the current group and so on. Regular expressions are used to quickly match lines.
 
-        total_time_intervals_regex = compile(r"(?P<count>\d+)\s*")
+        total_time_intervals_regex = compile(r"(?P<count>\d+)(?P<comment>.*)\s*")
         time_interval_regex = compile(r"(?P<t1>\d+)\s+(?P<t2>\d+)\s+\(\s*(?P<relationships>.+)\s*\)")
 
         total_time_intervals = 0
@@ -88,8 +90,9 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
             if reading_time_intervals:
                 if line == ".":
                     # This is the end of the current group, make one and add it to the list.
-                    time_intervals_groups.append(
-                        TimeIntervalsGroup(group_counter, total_time_intervals, time_intervals_relationships))
+                    time_intervals_groups.append(TimeIntervalsGroup(
+                        group_counter, total_time_intervals,
+                        time_intervals_relationships, comment))
                     group_counter += 1
                     time_intervals_relationships = []
                     reading_time_intervals = False
@@ -109,6 +112,7 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
                 match = total_time_intervals_regex.match(line)
                 if match:
                     total_time_intervals = int(match.group("count"))
+                    comment = match.group("comment")
                     reading_time_intervals = True
                 else:
                     raise RuntimeError("Failed to fetch total time intervals.")

@@ -35,7 +35,7 @@ class Coding(Enum):
 
 
 def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding: Coding = Coding.TERNARY_IMPLICATION) \
-        -> Tuple[List[str], List[str]]:
+        -> Tuple[int, List[str], List[str]]:
     """
     First compute the required algorithms on the input data to generate the boolean clauses, then convert those clauses
     into a textual format using the output generator and return.
@@ -92,4 +92,4 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
         number_lines.append(" ".join([str(n) for n in number_line]))
         math_lines.append(clause_to_string(clause))
 
-    return number_lines, math_lines
+    return number_dict.get_current_number() - 1, number_lines, math_lines
