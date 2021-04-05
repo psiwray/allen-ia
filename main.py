@@ -119,5 +119,3 @@ if __name__ == "__main__":
                             variable_mapping.write(f"{variable_number} {clause_to_string([literal])}")
                             variable_mapping.write(linesep)
                             literal.negated = True  # Restore the previous value for posterity.
-
-        pass
