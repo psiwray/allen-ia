@@ -1,4 +1,4 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
 from allen.expression_literal import ExpressionLiteral
 from allen.literal import Literal
@@ -17,6 +17,8 @@ class NumberDict:
 
     identified_literals: Dict[Tuple[int, int, Relationship], int]
     identified_expression_literals: Dict[Tuple[int, int, Relationship, int, int, Relationship], int]
+    reverse_identified_literals: Dict[int, Literal]
+    reverse_identified_expression_literals: Dict[int, ExpressionLiteral]
 
     # Unique positive integer number used to identify new literals.
     _current_number: int
@@ -24,6 +26,8 @@ class NumberDict:
     def __init__(self):
         self.identified_literals = {}
         self.identified_expression_literals = {}
+        self.reverse_identified_literals = {}
+        self.reverse_identified_expression_literals = {}
 
         self._current_number = 1
 
@@ -73,6 +77,7 @@ class NumberDict:
 
         old_number = self._current_number
         self.identified_literals[literal.as_tuple()] = self._current_number
+        self.reverse_identified_literals[self._current_number] = literal
         self._current_number += 1
         return old_number
 
@@ -86,8 +91,19 @@ class NumberDict:
 
         old_number = self._current_number
         self.identified_expression_literals[literal.as_tuple()] = self._current_number
+        self.reverse_identified_expression_literals[self._current_number] = literal
         self._current_number += 1
         return old_number
 
     def get_current_number(self):
         return self._current_number
+
+    def get_literal_from_number(self, number: int) -> Optional[Literal]:
+        if number in self.reverse_identified_literals:
+            return self.reverse_identified_literals[number]
+        return None
+
+    def get_expression_literal_from_number(self, number: int) -> Optional[ExpressionLiteral]:
+        if number in self.reverse_identified_expression_literals:
+            return self.reverse_identified_expression_literals[number]
+        return None

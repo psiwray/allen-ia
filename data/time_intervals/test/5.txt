@@ -1,0 +1,12 @@
+5 # test 1x5
+ 0 1 ( m oi di )
+ 0 2 ( f di o )
+ 0 3 ( < oi di )
+ 0 4 ( o fi di )
+ 1 2 ( mi fi o )
+ 1 3 ( o = fi )
+ 1 4 ( oi < = )
+ 2 3 ( < fi si )
+ 2 4 ( o < oi )
+ 3 4 ( > < f )
+.

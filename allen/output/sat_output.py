@@ -34,8 +34,21 @@ class Coding(Enum):
     EXPRESSION_REFERENCE = 1
 
 
+class GenerationResult:
+    number_dict: NumberDict
+    number_lines: List[str]
+    math_lines: List[str]
+    clauses: List[Clause]
+
+    def __init__(self, number_dict: NumberDict, number_lines: List[str], math_lines: List[str], clauses: List[Clause]):
+        self.number_dict = number_dict
+        self.number_lines = number_lines
+        self.math_lines = math_lines
+        self.clauses = clauses
+
+
 def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding: Coding = Coding.TERNARY_IMPLICATION) \
-        -> Tuple[int, List[str], List[str]]:
+        -> GenerationResult:
     """
     First compute the required algorithms on the input data to generate the boolean clauses, then convert those clauses
     into a textual format using the output generator and return.
@@ -52,19 +65,24 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
     clauses: List[Clause] = []
 
     # Execute every algorithm on the same set of time intervals.
-    print(f"Generating SAT output for group {group.number}.")
-    print(f"\tInverse implication...")
+    last_length = len(clauses)
     clauses.extend(generate_inverse_implication(group, data.inverse_implications))
-    print(f"\tAt least one...")
+    print(f"  Inverse implication generated {len(clauses) - last_length} new clauses.")
+    last_length = len(clauses)
     clauses.extend(generate_at_least_one(group))
-    print(f"\tAt most one...")
+    print(f"  At least one generated {len(clauses) - last_length} new clauses.")
+    last_length = len(clauses)
     clauses.extend(generate_at_most_one(group))
+    print(f"  At most one generated {len(clauses) - last_length} new clauses.")
+    last_length = len(clauses)
     if coding == Coding.TERNARY_IMPLICATION:
-        print(f"\tTernary implication...")
         clauses.extend(generate_ternary_implication(group, data.ternary_constraints, data.inverse_implications))
+        print(f"  Ternary constraints implication generated {len(clauses) - last_length} new clauses.")
     elif coding == Coding.EXPRESSION_REFERENCE:
-        print(f"\tExpression reference...")
         clauses.extend(generate_expression_reference(group, data.ternary_constraints, data.inverse_implications))
+        print(f"  Expression reference generated {len(clauses) - last_length} new clauses.")
+
+    print(f"  A total of {len(clauses)} clauses have been generated.")
 
     # Generate unique identifiers for every literal and add the result to the global list.
     for clause in clauses:
@@ -92,4 +110,6 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
         number_lines.append(" ".join([str(n) for n in number_line]))
         math_lines.append(clause_to_string(clause))
 
-    return number_dict.get_current_number() - 1, number_lines, math_lines
+    print(f"  A total of {number_dict.get_current_number() - 1} literals have been used.")
+
+    return GenerationResult(number_dict, number_lines, math_lines, clauses)
