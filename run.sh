@@ -1,44 +1,39 @@
 #!/bin/bash
 
-if [[ $# -ne 2 ]]; then
-  echo "Missing required arguments."
-  echo "Usage: '$0 <time_intervals_file> <encoding> <log_file>'."
-  exit -1
-fi
+input_time_intervals=$1
+output_folder_root=$2
+csv_dump=$3
 
-time_intervals_file=$1
-encoding=$2
-log_file=output/$encoding/`basename $time_intervals_file`/log.txt
-
-# First generate the required SAT data for every group in the time intervals file.
-python3 -s main.py --data=data --coding=$encoding --output=output/$encoding/`basename $time_intervals_file` $time_intervals_file
-if [[ $? -ne 0 ]]; then
-  echo "Clause generation failed."
-  exit -1
-fi
-echo "Output generation finished."
-
-# Then, for every group, check that minisat can satisfy the boolean expression.
-rm $log_file 2>/dev/null
-rm $log_file.tmp 2>/dev/null
-for sat_file in output/$encoding/`basename $time_intervals_file`/*.sat; do
-  echo "Validating SAT output for group $sat_file..."
-  echo "-----------------------------------------------" >> $log_file
-  echo "  $sat_file" >> $log_file
-  echo "-----------------------------------------------" >> $log_file
-  echo "" >> $log_file
-  minisat $sat_file 1> $log_file.tmp 2>&1
-  grep "CPU time" $log_file.tmp
-  cat $log_file.tmp >> $log_file
-  rm $log_file.tmp
+for sat_input in $input_time_intervals/*.txt; do
+  echo "Executing instance $sat_input."
+  python3 -s main.py --data=data --output=$output_folder_root/ternary_impl/`basename $sat_input` --coding=ternary_impl --solver=/usr/bin/minisat $sat_input
+  python3 -s main.py --data=data --output=$output_folder_root/expression_ref/`basename $sat_input` --coding=expression_ref --solver=/usr/bin/minisat $sat_input
 done
 
-# Finally, print the result.
-echo "Done. Now checking logs."
-if [[ `grep "UNSATISFIABLE" $log_file | wc -l` -eq 0 ]]; then
-  echo "No unsatisfiable groups found."
-  exit 0
-else
-  echo "Some groups are unsatisfiable. Check $log_file for more information."
-  exit -1
-fi
+echo "istanza,gruppo,risultato,variabili,clausole,riavvii,conflitti,decisioni,propagazioni,conflitto_letterali,tempo_cpu" > ${csv_dump}_ternary_impl.csv
+echo "istanza,gruppo,risultato,variabili,clausole,riavvii,conflitti,decisioni,propagazioni,conflitto_letterali,tempo_cpu" > ${csv_dump}_expression_ref.csv
+
+# Gather all results inside a CSV-formatted file.
+for coding in ternary_impl expression_ref; do
+  for instance_name in $output_folder_root/$coding/*.txt; do
+    for group_number in $instance_name/*; do
+      group_number=`basename $group_number`
+      results_file="$instance_name/$group_number/solver_log.txt"
+
+      satisfiable=`cat $results_file | grep -o "UNSATISFIABLE\|SATISFIABLE"`
+      variables=`cat $results_file | grep "Number of variables:" | grep -oE "[[:digit:]]+"`
+      clauses=`cat $results_file | grep "Number of clauses:" | grep -oE "[[:digit:]]+"`
+      restarts=`cat $results_file | grep "restarts" | grep -oE "[[:blank:]]+[[:digit:]]+"`
+      conflicts=`cat $results_file | grep "conflicts" | grep -oE "[[:blank:]]+[[:digit:]]+[[:blank:]]"`
+      decisions=`cat $results_file | grep "decisions" | grep -oE "[[:blank:]]+[[:digit:]]+[[:blank:]]"`
+      propagations=`cat $results_file | grep "propagations" | grep -oE "[[:blank:]]+[[:digit:]]+[[:blank:]]"`
+      conflict_literals=`cat $results_file | grep "conflict literals" | grep -oE "[[:blank:]]+[[:digit:]]+[[:blank:]]"`
+      cpu_time=`cat $results_file | grep "CPU time" | grep -oE "[[:digit:]]+(.[[:digit:]]+)? s"`
+
+      instance=`basename $instance_name | cut -d "." -f 1`
+      group=$group_number
+
+      echo "$instance,$group,$satisfiable,$variables,$clauses,$restarts,$conflicts,$decisions,$propagations,$conflict_literals,$cpu_time" >> ${csv_dump}_$coding.csv
+    done
+  done
+done
