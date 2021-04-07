@@ -92,10 +92,11 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
                 # Add the clause we wanted to generate in the first place using
                 # the previously generated expression literals.
                 for r in t1_t3_relationships:
-                    clause.append(ExpressionLiteral(
-                        Literal(t2, t3, r_t2_t3),
-                        Literal(t1, t3, r)
-                    ))
+                    if ((t1, t3) in intervals_dict) and (r in intervals_dict[(t1, t3)]):
+                        clause.append(ExpressionLiteral(
+                            Literal(t2, t3, r_t2_t3),
+                            Literal(t1, t3, r)
+                        ))
 
             generated_clauses.append(clause)
 
@@ -105,9 +106,10 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
     for i in range(n):
         for j in range(n):
             for k in range(n):
-                if i != j and j != k and i != k:
-                    generation_result = generate_clause_for_triple(i, j, k)
-                    if generation_result:
-                        clauses.extend(generation_result)
+                if i == j or j == k or i == k:
+                    continue
+                generation_result = generate_clause_for_triple(i, j, k)
+                if generation_result:
+                    clauses.extend(generation_result)
 
     return clauses

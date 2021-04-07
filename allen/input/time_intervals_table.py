@@ -1,5 +1,6 @@
 from re import compile
 from typing import List, Tuple, Dict
+from copy import copy
 
 from allen.relationship import Relationship
 
@@ -90,9 +91,21 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
             if reading_time_intervals:
                 if line == ".":
                     # This is the end of the current group, make one and add it to the list.
-                    time_intervals_groups.append(TimeIntervalsGroup(
+                    group = TimeIntervalsGroup(
                         group_counter, total_time_intervals,
-                        time_intervals_relationships, comment))
+                        time_intervals_relationships, comment)
+
+                    # Fill the remaining time intervals that aren't described in the table with all
+                    # the possible relationships.
+                    all_relationships = [r for r in Relationship]
+                    dictionary = time_intervals_to_dict(group)
+                    for i in range(total_time_intervals):
+                        for j in range(i + 1, total_time_intervals):
+                            if (i, j) not in dictionary:
+                                group.intervals_relationships.append(
+                                    TimeIntervalsRelationships(i, j, copy(all_relationships)))
+
+                    time_intervals_groups.append(group)
                     group_counter += 1
                     time_intervals_relationships = []
                     reading_time_intervals = False
@@ -111,7 +124,7 @@ def read_time_intervals_table(file_path: str) -> TimeIntervalsTable:
                 # First line is always the number of total time intervals contained.
                 match = total_time_intervals_regex.match(line)
                 if match:
-                    total_time_intervals = int(match.group("count"))
+                    total_time_intervals = int(match.group("count")) + 1
                     comment = match.group("comment")
                     reading_time_intervals = True
                 else:

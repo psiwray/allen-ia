@@ -16,7 +16,7 @@ def generate_at_most_one(group: TimeIntervalsGroup) -> List[Clause]:
     clauses: List[Clause] = []
 
     for intervals_relationships in group.intervals_relationships:
-        # FIXME: With this loop duplicates are eliminated.
+        # With this loop duplicates are eliminated.
         for i in range(len(intervals_relationships.relationships)):
             for j in range(i + 1, len(intervals_relationships.relationships)):
                 r1 = intervals_relationships.relationships[i]

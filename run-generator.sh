@@ -18,14 +18,7 @@ for generation in `seq 1 $generations`; do
   python3 -s main.py --data=data --output=$folder/$generation/ternary_impl --coding=ternary_impl $folder/$generation/instance.sat
   python3 -s main.py --data=data --output=$folder/$generation/expression_ref --coding=expression_ref $folder/$generation/instance.sat
 
-  echo "Finished generating boolean expressions, now checking."
-  for sat in $folder/$generation/ternary_impl/*.sat; do
-    minisat $sat >> $folder/$generation/ternary_impl/log.txt
+  for file in `find generation/ -name solver_log.txt`; do
+    grep "UNSATISFIABLE" $file
   done
-  for sat in $folder/$generation/expression_ref/*.sat; do
-    minisat $sat >> $folder/$generation/expression_ref/log.txt
-  done
-
-  grep "UNSATISFIABLE" $folder/$generation/ternary_impl/log.txt
-  grep "UNSATISFIABLE" $folder/$generation/expression_ref/log.txt
 done

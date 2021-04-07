@@ -22,7 +22,7 @@ def generate_inverse_implication(group: TimeIntervalsGroup, table: InverseRelati
     # Now build the clauses.
     for intervals_relationships in group.intervals_relationships:
         for relationship in intervals_relationships.relationships:
-            # FIXME: Skip the equal relationship since it always generates a true value.
+            # Skip the equal relationship since it always generates a true value.
             if relationship == Relationship.EQUAL:
                 continue
 

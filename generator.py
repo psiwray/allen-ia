@@ -122,7 +122,7 @@ if __name__ == "__main__":
     iterations = find_argument("-i", "--iterations") or 5
     groups = find_argument("-g", "--groups") or 10
 
-    seed(None)
+    seed()
     for i in range(int(groups)):
         instance = generate_instance(int(total_intervals), int(max_time), int(iterations))
         for line in format_instance(instance, i):
