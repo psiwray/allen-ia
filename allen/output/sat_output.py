@@ -66,15 +66,19 @@ def generate_sat_output_for_group(group: TimeIntervalsGroup, data: Data, coding:
 
     # Execute every algorithm on the same set of time intervals.
     last_length = len(clauses)
+
     clauses.extend(generate_inverse_implication(group, data.inverse_implications))
     print(f"  Inverse implication generated {len(clauses) - last_length} new clauses.")
     last_length = len(clauses)
+
     clauses.extend(generate_at_least_one(group))
     print(f"  At least one generated {len(clauses) - last_length} new clauses.")
     last_length = len(clauses)
+
     clauses.extend(generate_at_most_one(group))
     print(f"  At most one generated {len(clauses) - last_length} new clauses.")
     last_length = len(clauses)
+
     if coding == Coding.TERNARY_IMPLICATION:
         clauses.extend(generate_ternary_implication(group, data.ternary_constraints, data.inverse_implications))
         print(f"  Ternary constraints implication generated {len(clauses) - last_length} new clauses.")

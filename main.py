@@ -12,7 +12,7 @@ from allen.input.time_intervals_table import read_time_intervals_table
 from allen.output.sat_output import generate_sat_output_for_group, Data, Coding
 
 if __name__ == "__main__":
-    matched_args, remaining_args = getopt(argv[1:], "d:c:o:s", ["data=", "coding=", "output=", "solver="])
+    matched_args, remaining_args = getopt(argv[1:], "d:c:o:s", ["data=", "coding=", "output=", "solver=", "groups="])
 
 
     def find_argument(short: str, long: str) -> Optional[str]:
@@ -28,7 +28,15 @@ if __name__ == "__main__":
     coding = find_argument("-c", "--coding") or "ternary_impl"
     output_folder = find_argument("-o", "--output") or "."
     solver_path = find_argument("-s", "--solver") or "minisat"
+    groups_list = find_argument("-g", "--groups") or []
     input_file = remaining_args[0]
+
+    # Convert the number of groups to work on to a list integers.
+    if isinstance(groups_list, str):
+        groups_list = [int(g) for g in groups_list.split(",")]
+        check_groups = True
+    else:
+        check_groups = False
 
     # Read the data from the
     data = Data(
@@ -50,6 +58,9 @@ if __name__ == "__main__":
         pass
 
     for group in read_time_intervals_table(input_file):
+        if check_groups and (group.number not in groups_list):
+            continue  # Skip this group.
+
         print(f"Working for group number {group.number}.")
 
         generation_result = generate_sat_output_for_group(group, data, coding_enum)

@@ -55,13 +55,16 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
                     Literal(t2, t3, r_t2_t3, True)
                 ]
 
+                added_at_least_something = False
                 for r in t1_t3_relationships:
                     # Before adding the relationship to the list we first need to check if it's actually possible for
                     # the first and third time interval to have that relationship. If not, we skip adding this one.
                     if ((t1, t3) in intervals_dict) and (r in intervals_dict[(t1, t3)]):
                         clause_for_triplet.append(Literal(t1, t3, r))
+                        added_at_least_something = True
 
-                generated_clauses.append(clause_for_triplet)
+                if added_at_least_something:
+                    generated_clauses.append(clause_for_triplet)
 
         return generated_clauses
 

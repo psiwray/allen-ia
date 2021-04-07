@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $# -ne 3 ]]; then
+  echo "Wrong number of arguments passed."
+  exit -1
+fi
+
 input_time_intervals=$1
 output_folder_root=$2
 csv_dump=$3
