@@ -110,6 +110,5 @@ def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConst
                     continue
                 generation_result = generate_clause_for_triple(i, j, k)
                 if generation_result:
-                    clauses.extend(generation_result)
-
-    return clauses
+                    for clause in generation_result:
+                        yield clause

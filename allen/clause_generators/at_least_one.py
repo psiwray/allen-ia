@@ -13,8 +13,6 @@ def generate_at_least_one(group: TimeIntervalsGroup) -> List[Clause]:
     :return: the generated clauses.
     """
 
-    clauses: List[Clause] = []
-
     for intervals_relationships in group.intervals_relationships:
         clause: Clause = []
         for relationship in intervals_relationships.relationships:
@@ -22,6 +20,4 @@ def generate_at_least_one(group: TimeIntervalsGroup) -> List[Clause]:
                 intervals_relationships.t1,
                 intervals_relationships.t2,
                 relationship))
-        clauses.append(clause)
-
-    return clauses
+        yield clause

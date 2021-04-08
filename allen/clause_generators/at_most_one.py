@@ -13,8 +13,6 @@ def generate_at_most_one(group: TimeIntervalsGroup) -> List[Clause]:
     :return: the generated clauses.
     """
 
-    clauses: List[Clause] = []
-
     for intervals_relationships in group.intervals_relationships:
         # With this loop duplicates are eliminated.
         for i in range(len(intervals_relationships.relationships)):
@@ -22,7 +20,7 @@ def generate_at_most_one(group: TimeIntervalsGroup) -> List[Clause]:
                 r1 = intervals_relationships.relationships[i]
                 r2 = intervals_relationships.relationships[j]
 
-                clauses.append([
+                yield [
                     Literal(
                         intervals_relationships.t1,
                         intervals_relationships.t2,
@@ -33,6 +31,4 @@ def generate_at_most_one(group: TimeIntervalsGroup) -> List[Clause]:
                         intervals_relationships.t2,
                         r2, True
                     )
-                ])
-
-    return clauses
+                ]

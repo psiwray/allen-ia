@@ -19,7 +19,6 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
     :return: the generated clauses.
     """
 
-    clauses: List[Clause] = []
     inverse_relationships_dict = inverse_relationships_to_dict(inverse_table)
     intervals_dict = time_intervals_to_dict(group)
     relationships_dict = ternary_constraints_to_dict(table)
@@ -76,6 +75,5 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
                     continue
                 generation_result = generate_clause_for_triplet(i, j, k)
                 if generation_result:
-                    clauses.extend(generation_result)
-
-    return clauses
+                    for clause in generation_result:
+                        yield clause
