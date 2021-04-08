@@ -1,0 +1,5 @@
+2 #1-N3-R6.5-D2-S0
+ 0 2 (d < > di s)
+ 0 1 (mi = < > di oi m s si)
+ 1 2 (di = > d o m mi s)
+.
