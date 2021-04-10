@@ -1,11 +1,11 @@
 from typing import List, Optional
 
-from allen.clause import Clause
-from allen.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
-from allen.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
-from allen.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
-from allen.literal import Literal
-from allen.relationship import Relationship
+from allen_ia.clause import Clause
+from allen_ia.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
+from allen_ia.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
+from allen_ia.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
+from allen_ia.literal import Literal
+from allen_ia.relationship import Relationship
 
 
 def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstraintsTable,

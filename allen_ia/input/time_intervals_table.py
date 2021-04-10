@@ -2,7 +2,7 @@ from re import compile
 from typing import List, Tuple, Dict
 from copy import copy
 
-from allen.relationship import Relationship
+from allen_ia.relationship import Relationship
 
 
 class TimeIntervalsRelationships:

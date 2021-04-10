@@ -1,8 +1,8 @@
 from typing import Dict, Tuple, Optional
 
-from allen.expression_literal import ExpressionLiteral
-from allen.literal import Literal
-from allen.relationship import Relationship
+from allen_ia.expression_literal import ExpressionLiteral
+from allen_ia.literal import Literal
+from allen_ia.relationship import Relationship
 
 
 class NumberDict:

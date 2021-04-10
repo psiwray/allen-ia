@@ -5,11 +5,11 @@ from subprocess import run
 from sys import argv
 from typing import Optional
 
-from allen.clause import clause_to_string
-from allen.input.inverse_relationships_table import read_inverse_relationships_table
-from allen.input.ternary_constraints_table import read_ternary_constraints_table
-from allen.input.time_intervals_table import read_time_intervals_table
-from allen.output.sat_output import generate_sat_output_for_group, Data, Coding
+from allen_ia.clause import clause_to_string
+from allen_ia.input.inverse_relationships_table import read_inverse_relationships_table
+from allen_ia.input.ternary_constraints_table import read_ternary_constraints_table
+from allen_ia.input.time_intervals_table import read_time_intervals_table
+from allen_ia.output.sat_output import generate_sat_output_for_group, Data, Coding
 
 if __name__ == "__main__":
     matched_args, remaining_args = getopt(argv[1:], "d:c:o:s", ["data=", "coding=", "output=", "solver=", "groups="])

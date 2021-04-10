@@ -1,11 +1,11 @@
 from typing import List, Callable, Optional
 
-from allen.clause import Clause
-from allen.expression_literal import ExpressionLiteral
-from allen.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
-from allen.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
-from allen.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
-from allen.literal import Literal
+from allen_ia.clause import Clause
+from allen_ia.expression_literal import ExpressionLiteral
+from allen_ia.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
+from allen_ia.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
+from allen_ia.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
+from allen_ia.literal import Literal
 
 
 def generate_expression_reference(group: TimeIntervalsGroup, table: TernaryConstraintsTable,

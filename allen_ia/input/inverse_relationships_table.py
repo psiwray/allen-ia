@@ -1,7 +1,7 @@
 from re import compile
 from typing import List, Dict
 
-from allen.relationship import Relationship
+from allen_ia.relationship import Relationship
 
 
 class InverseRelationship:

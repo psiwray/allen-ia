@@ -1,18 +1,18 @@
 from enum import Enum
 from typing import List, Tuple
 
-from allen.clause import Clause, clause_to_string
-from allen.clause_generators.at_least_one import generate_at_least_one
-from allen.clause_generators.at_most_one import generate_at_most_one
-from allen.clause_generators.expression_reference import generate_expression_reference
-from allen.clause_generators.inverse_implication import generate_inverse_implication
-from allen.clause_generators.ternary_implication import generate_ternary_implication
-from allen.expression_literal import ExpressionLiteral
-from allen.input.inverse_relationships_table import InverseRelationshipsTable
-from allen.input.ternary_constraints_table import TernaryConstraintsTable
-from allen.input.time_intervals_table import TimeIntervalsGroup
-from allen.literal import Literal
-from allen.output.number_dict import NumberDict
+from allen_ia.clause import Clause, clause_to_string
+from allen_ia.clause_generators.at_least_one import generate_at_least_one
+from allen_ia.clause_generators.at_most_one import generate_at_most_one
+from allen_ia.clause_generators.expression_reference import generate_expression_reference
+from allen_ia.clause_generators.inverse_implication import generate_inverse_implication
+from allen_ia.clause_generators.ternary_implication import generate_ternary_implication
+from allen_ia.expression_literal import ExpressionLiteral
+from allen_ia.input.inverse_relationships_table import InverseRelationshipsTable
+from allen_ia.input.ternary_constraints_table import TernaryConstraintsTable
+from allen_ia.input.time_intervals_table import TimeIntervalsGroup
+from allen_ia.literal import Literal
+from allen_ia.output.number_dict import NumberDict
 
 
 class Data:

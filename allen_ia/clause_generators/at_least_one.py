@@ -1,8 +1,8 @@
 from typing import List
 
-from allen.clause import Clause
-from allen.input.time_intervals_table import TimeIntervalsGroup
-from allen.literal import Literal
+from allen_ia.clause import Clause
+from allen_ia.input.time_intervals_table import TimeIntervalsGroup
+from allen_ia.literal import Literal
 
 
 def generate_at_least_one(group: TimeIntervalsGroup) -> List[Clause]:

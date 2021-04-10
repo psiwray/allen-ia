@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from allen.relationship import Relationship
+from allen_ia.relationship import Relationship
 
 
 class Literal:

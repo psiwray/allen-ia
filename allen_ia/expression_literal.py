@@ -1,7 +1,7 @@
 from typing import Tuple
 
-from allen.literal import Literal
-from allen.relationship import Relationship
+from allen_ia.literal import Literal
+from allen_ia.relationship import Relationship
 
 
 class ExpressionLiteral:

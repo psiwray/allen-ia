@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from allen.expression_literal import ExpressionLiteral
-from allen.literal import Literal
+from allen_ia.expression_literal import ExpressionLiteral
+from allen_ia.literal import Literal
 
 # A clause is simply a collection of literals (either simple or expression) ORed together.
 Clause = List[Union[Literal, ExpressionLiteral]]
