@@ -1,9 +1,10 @@
 from typing import List, Optional
 
 from allen_ia.clause import Clause
-from allen_ia.input.inverse_relationships_table import InverseRelationshipsTable, inverse_relationships_to_dict
-from allen_ia.input.ternary_constraints_table import TernaryConstraintsTable, ternary_constraints_to_dict
-from allen_ia.input.time_intervals_table import TimeIntervalsGroup, time_intervals_to_dict
+from allen_ia.clause_generators.generator import Dicts, generate
+from allen_ia.input.inverse_relationships_table import InverseRelationshipsTable
+from allen_ia.input.ternary_constraints_table import TernaryConstraintsTable
+from allen_ia.input.time_intervals_table import TimeIntervalsGroup
 from allen_ia.literal import Literal
 from allen_ia.relationship import Relationship
 
@@ -19,36 +20,15 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
     :return: the generated clauses.
     """
 
-    inverse_relationships_dict = inverse_relationships_to_dict(inverse_table)
-    intervals_dict = time_intervals_to_dict(group)
-    relationships_dict = ternary_constraints_to_dict(table)
-
-    # Expand the intervals dictionary to include inverse mappings too.
-    intervals_dict_ext = {}
-    for (t_from, t_to), relationships in intervals_dict.items():
-        intervals_dict_ext[(t_to, t_from)] = [inverse_relationships_dict[r] for r in relationships]
-    intervals_dict.update(intervals_dict_ext)
-
-    def generate_clause_for_triplet(t1: int, t2: int, t3: int) -> Optional[List[Clause]]:
+    def generate_clause_for_triplet(dicts: Dicts, t1: int, t2: int, t3: int) -> Optional[List[Clause]]:
         generated_clauses: List[Clause] = []
 
-        # First find the possible combinations of relationships between (i, j)
-        # and (j, k) using the time intervals. Next, check what possible
-        # relationships can occur between (i, k) and use them to construct a
-        # single clause.
-        if (t1, t2) not in intervals_dict:
-            return
-        if (t2, t3) not in intervals_dict:
-            return
-        if (t1, t3) not in intervals_dict:
-            return
-
-        t1_t2_relationships: List[Relationship] = intervals_dict[(t1, t2)]
-        t2_t3_relationships: List[Relationship] = intervals_dict[(t2, t3)]
+        t1_t2_relationships: List[Relationship] = dicts.intervals_dict[(t1, t2)]
+        t2_t3_relationships: List[Relationship] = dicts.intervals_dict[(t2, t3)]
 
         for r_t1_t2 in t1_t2_relationships:
             for r_t2_t3 in t2_t3_relationships:
-                t1_t3_relationships: List[Relationship] = relationships_dict[(r_t1_t2, r_t2_t3)]
+                t1_t3_relationships: List[Relationship] = dicts.relationships_dict[(r_t1_t2, r_t2_t3)]
                 clause_for_triplet: Clause = [
                     Literal(t1, t2, r_t1_t2, True),
                     Literal(t2, t3, r_t2_t3, True)
@@ -58,7 +38,7 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
                 for r in t1_t3_relationships:
                     # Before adding the relationship to the list we first need to check if it's actually possible for
                     # the first and third time interval to have that relationship. If not, we skip adding this one.
-                    if ((t1, t3) in intervals_dict) and (r in intervals_dict[(t1, t3)]):
+                    if ((t1, t3) in dicts.intervals_dict) and (r in dicts.intervals_dict[(t1, t3)]):
                         clause_for_triplet.append(Literal(t1, t3, r))
                         added_at_least_something = True
 
@@ -67,13 +47,5 @@ def generate_ternary_implication(group: TimeIntervalsGroup, table: TernaryConstr
 
         return generated_clauses
 
-    n = group.total_time_intervals
-    for i in range(n):
-        for j in range(n):
-            for k in range(n):
-                if i == j or j == k or i == k:
-                    continue
-                generation_result = generate_clause_for_triplet(i, j, k)
-                if generation_result:
-                    for clause in generation_result:
-                        yield clause
+    for item in generate(group, table, inverse_table, generate_clause_for_triplet):
+        yield item

@@ -19,7 +19,7 @@ class ExpressionLiteral:
         self.negated = negated
 
     def __str__(self):
-        return f"{chr(0xAC) if self.negated else ''}[({self.l1}) \u2227 ({str(self.l2)})]"
+        return f"{chr(0xAC) if self.negated else ''}[{self.l1} \u2227 {str(self.l2)}]"
 
     def as_tuple(self) -> Tuple[int, int, Relationship, int, int, Relationship]:
         """

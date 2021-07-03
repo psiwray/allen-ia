@@ -19,6 +19,8 @@ class Data:
     """
     A collection of all the data required by the algorithms to generate the clauses.
     """
+    inverse_implications: InverseRelationshipsTable
+    ternary_constraints: TernaryConstraintsTable
 
     def __init__(self, inverse_implications: InverseRelationshipsTable, ternary_constraints: TernaryConstraintsTable):
         self.inverse_implications = inverse_implications
