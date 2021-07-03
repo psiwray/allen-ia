@@ -1,0 +1,17 @@
+9 #1-N10-R6.5-D3-S0
+0 5 (di < d oi m s si fi)
+1 7 (o = d oi m fi)
+1 2 (mi = > di o oi m)
+0 8 (d < > o mi f fi)
+0 3 (mi = > d di m s)
+2 3 (m < > d di o mi si f)
+4 5 (oi = > o fi)
+3 9 (f = o oi mi s fi)
+6 7 (fi < > oi mi si f)
+4 6 (mi oi m f)
+1 5 (o = < di m mi f fi)
+0 6 (= d oi m f)
+2 8 (m = di o s fi)
+1 6 (mi = di f fi)
+4 7 (< = > d o mi si f)
+.
